@@ -1,0 +1,7 @@
+<div id="filters" >
+  <ul *ngFor="let filter of filters;">
+    <li><button [routerLink]=[filter.toLowerCase()] type="button" class="filter">{{filter}}</button></li>
+  </ul>
+</div>
+
+
