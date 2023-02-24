@@ -1,7 +1,11 @@
 <div id="filters" >
-  <ul *ngFor="let filter of filters;">
-    <li><button [routerLink]=[filter.toLowerCase()] type="button" class="filter">{{filter}}</button></li>
+  <ul class="list-group" *ngFor="let filter of filters;">
+    <a style="cursor: pointer; text-decoration: none;"
+       [routerLink]="['/home', filter.toLowerCase()]"
+       routerLinkActive="active"
+       type="button" class="filter">
+      <li class="list-group-item">{{filter}}</li>
+    </a>
   </ul>
 </div>
-
 

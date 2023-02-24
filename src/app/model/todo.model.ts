@@ -1,3 +1,4 @@
+
 export class ToDo {
   constructor(
     public id: number,
@@ -5,6 +6,6 @@ export class ToDo {
     public tipo: string,
     public important: boolean,
     public shared: boolean,
-    public data: Date
+    public data: string
   ){}
 }

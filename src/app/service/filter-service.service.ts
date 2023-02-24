@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class FilterServiceService {
 
-  filters = ['All', 'Important', 'Next 7 Days', 'Shared With', 'Private'];
-  filtersProjects = ['Web Applications', 'Personal'];
+  filters = ['All', 'Important', 'Next 7 Days', 'Shared', 'Private'];
+  filtersProjects = ['Work', 'Personal'];
 
   constructor() { }
 

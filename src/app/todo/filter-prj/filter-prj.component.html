@@ -1,5 +1,12 @@
+<p style="padding-bottom: 10px"><b>Projects</b></p>
 <div id="filter-projects">
-  <ul *ngFor="let filterPrj of filtersProjects">
-    <li><button class="filter">{{filterPrj}}</button></li>
+  <ul class="list-group" *ngFor="let filterPrj of filtersProjects">
+    <a class="filter"
+       style="cursor: pointer;
+       text-decoration: none;"
+       [routerLink]="['/home', filterPrj.toLowerCase()]"
+       routerLinkActive="active">
+      <li class="list-group-item">{{filterPrj}}</li>
+    </a>
   </ul>
 </div>
