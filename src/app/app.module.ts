@@ -10,6 +10,10 @@ import { TodoItemComponent } from './todo/todo-list/todo-item/todo-item.componen
 import { FilterComponent } from './todo/filter/filter.component';
 import { FilterPrjComponent } from './todo/filter-prj/filter-prj.component';
 import { HeaderComponent } from './header/header.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -24,7 +28,13 @@ import { HeaderComponent } from './header/header.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NoopAnimationsModule,
+    BrowserAnimationsModule,
+    MatSlideToggleModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

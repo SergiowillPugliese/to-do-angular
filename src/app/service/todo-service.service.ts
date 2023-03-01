@@ -1,18 +1,19 @@
 import {Injectable} from '@angular/core';
 import * as moment from "moment/moment";
 import {ToDo} from "../model/todo.model";
-import {Subject} from "rxjs";
-import {logMessages} from "@angular-devkit/build-angular/src/builders/browser-esbuild/esbuild";
-import {FilterServiceService} from "./filter-service.service";
+import {Observable, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoServiceService {
-  toDoMap = new Map()
+  inputSearch!: string;
+  params = 'all';
 
-  toDo = [
-    new ToDo(1, 'task 1', 'personal', true, false, moment('02/02/2023', 'DD/MM/YYYY').format('DD/MM/YYYY')),
+  sbj = new Subject();
+
+  toDo: ToDo[] = [
+    new ToDo(1, 'task 1', 'personal', true, false, moment('02/03/2023', 'DD/MM/YYYY').format('DD/MM/YYYY')),
     new ToDo(2, 'task 2', 'Work', true, true, moment('05/02/2023', 'DD/MM/YYYY').format('DD/MM/YYYY')),
     new ToDo(3, 'task 3', 'Personal', false, true, moment('25/03/2023', 'DD/MM/YYYY').format('DD/MM/YYYY')),
     new ToDo(4, 'task 4', 'Work', false, true, moment('25/02/2023', 'DD/MM/YYYY').format('DD/MM/YYYY')),
@@ -23,39 +24,76 @@ export class TodoServiceService {
     new ToDo(9, 'task 9', 'Work', false, true, moment('25/02/2023', 'DD/MM/YYYY').format('DD/MM/YYYY')),
     new ToDo(10, 'task 10', 'Personal', true, true, moment('25/09/2023', 'DD/MM/YYYY').format('DD/MM/YYYY'))
   ];
-
-  constructor(private filterService: FilterServiceService) {
+  toDoMap = new Map(
+    [
+      ['all', () => this.getAll()],
+      ['important', () => this.getImportantShared()],
+      ['next 7 days', () => this.getDays()],
+      ['shared', () => this.getImportantShared()],
+      ['private', () => this.getPrivate()],
+      ['work', () => this.getWork()],
+      ['personal', () => this.getWork()]
+    ]
+  );
+  constructor() {
   }
 
-  getFilteredToDo(filter: string) {
-    //console.log(filter);
-    this.toDoMap = new Map(
-      [
-        ['all', () => this.getAll(this.toDo)],
-        ['important', () => this.getImportant(filter, this.toDo)],
-        ['next 7 days', () => this.getDays(this.toDo)],
-        ['shared', () => this.getShared(filter.trim(), this.toDo)],
-        ['private', () => this.getPrivate(filter.trim(), this.toDo)],
-        ['work', () => this.getWork(filter, this.toDo)],
-        ['personal', () => this.getWork(filter, this.toDo)]
-
-      ]
-    );
-
-    return this.toDoMap.get(filter);
+  getTodo() {
+    this.getFilteredToDo()
+    this.sbj.next(this.toDo.slice())
   }
 
-  getAll(todo: ToDo[]) {return todo.slice();};
-  getImportant(value: string, todo: ToDo[]){return todo.filter((element: any) => element[value]);};
-  getDays(todo: ToDo[]){
-    let today=moment();
-    const format = 'DD/MM/YYYY'
-    return todo.filter(el => moment(el.data, format)
-      .isBetween(moment(today, format), moment(today, format)
-        .add(7,'days'), undefined, '[]'));
+  getFilteredToDo() {
+    const func = this.toDoMap.get(this.params)
+    return func && func();
+  }
+  getAll() {
+   return this.toDo.slice();
   };
-  getShared(value: string, todo: ToDo[]){return todo.filter((element: any) => element[value])}
-  getPrivate(value: string, todo: ToDo[]){return todo.filter((element: any) => !element.shared)} //non funziona
-  getWork(value: string, todo: ToDo[]){return todo.filter((element: any) => element.tipo ===  value.charAt(0).toUpperCase() + value.slice(1))}
+  getImportantShared(){
+    if (this.inputSearch) {
+      return this.toDo.filter((e:any) => e[this.params] && e.task
+        .includes(this.inputSearch))
+    } else {
+      return this.toDo.filter((element: any) => element[this.params]);
+    }
+  };
+  getDays(){
+    let today = moment();
+    const format = 'DD/MM/YYYY'
+    if (this.inputSearch) {
+      return this.toDo.filter(el => moment(el.data, format)
+        .isBetween(today, moment()
+          .add(7, 'days'), undefined, '[]') && el.task.includes(this.inputSearch));
+
+    } else {
+      return this.toDo.filter(el => moment(el.data, format)
+        .isBetween(today, moment()
+          .add(7, 'days'), undefined, '[]'));
+    }
+  };
+  getPrivate(){
+    if (this.inputSearch) {
+      return this.toDo.filter((element: any) => !element.shared && element.task
+        .includes(this.inputSearch));
+    } else {
+      return this.toDo.filter((element: any) => !element.shared);
+    }
+  }
+  getWork(){
+    if (this.inputSearch) {
+      return this.toDo.filter((element: any) => element.tipo ===  this.params
+        .charAt(0).toUpperCase() + this.params.slice(1) && element.task
+        .includes(this.inputSearch))
+    } else {
+      return this.toDo.filter((element: any) => element.tipo ===  this.params
+        .charAt(0).toUpperCase() + this.params.slice(1));
+    }
+  }
 }
+
+
+
+
+
 

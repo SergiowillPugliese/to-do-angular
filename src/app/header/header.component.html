@@ -7,7 +7,7 @@
         ToDo Manager</p>
     </div>
     <div class="search col text-center">
-      <input type="text" id="search" placeholder="Search" class="rounded p-2 w-75">
+      <input type="text" [formControl]="search" />
     </div>
     <div class="header-text userLogged col text-end">
       <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">

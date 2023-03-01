@@ -5,7 +5,7 @@ import {TodoComponent} from "./todo/todo.component";
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/home/all', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, children: [
       {path: '', component: TodoComponent},
       {path: ':filter', component: TodoComponent}
